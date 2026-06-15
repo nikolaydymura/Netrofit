@@ -130,6 +130,14 @@ struct MethodMacroParser<D: DeclSyntaxProtocol & WithOptionalCodeBlockSyntax, C:
             )
         }
 
+        if let url = try getCustomUrl() {
+            codes.append(
+                """
+                builder.url = \(raw: url)
+                """
+            )
+        }
+
         for query in try getQueries() {
             codes.append(
                 """
@@ -276,6 +284,17 @@ extension MethodMacroParser {
             }
         }
         return "\"" + comps.joined(separator: "/") + "\""
+    }
+
+    func getCustomUrl() throws -> String? {
+        let funcArgs = funcDecl.parameterList
+        let variblePathComps = self.variblePathComps
+        for arg in funcArgs {
+            if let query = arg.attributes.findAttribute(named: "Url"), query.atSign.text == "@" {
+                return arg.internalName
+            }
+        }
+        return nil
     }
 
     func getQueries() throws -> [(key: String, value: String, encoded: Bool)] {

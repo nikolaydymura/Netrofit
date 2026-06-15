@@ -12,6 +12,7 @@ public enum PayloadFormat: String {
 }
 
 public struct RequestBuilder {
+    public var url: String?
     public var path: String
     public var method: String
     public var encoder: HTTPBodyEncoder
@@ -87,6 +88,9 @@ public struct RequestBuilder {
 
 extension RequestBuilder {
     public func fullURL(baseURL: String) throws -> URL {
+        if let url, let fullUrl = URL(string: url) {
+            return fullUrl
+        }
         var baseURL = baseURL
         var path = path
         if baseURL.hasSuffix("/") {
@@ -111,7 +115,10 @@ extension RequestBuilder {
     }
 
     public func bodyData() throws -> Data? {
-        switch payloadFormat {
+        if let data = body as? Data {
+            return data
+        }
+        return switch payloadFormat {
         case .JSON:
             try JSONPayloadData()
         case .FormUrlEncoded:

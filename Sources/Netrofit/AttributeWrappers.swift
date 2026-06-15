@@ -2,6 +2,16 @@ import Foundation
 
 // URL
 @propertyWrapper
+public struct Url<T: CustomStringConvertible> {
+    public var wrappedValue: T
+
+    public init(wrappedValue: T) {
+        self.wrappedValue = wrappedValue
+    }
+}
+
+//Path
+@propertyWrapper
 public struct Path<T: CustomStringConvertible> {
     public var wrappedValue: T
     private let path: String?
