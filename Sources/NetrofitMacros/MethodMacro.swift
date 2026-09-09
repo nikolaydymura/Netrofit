@@ -168,6 +168,12 @@ struct MethodMacroParser<D: DeclSyntaxProtocol & WithOptionalCodeBlockSyntax, C:
                     """
                 )
             }
+        } else if let fileBody = try getFileBody() {
+            codes.append(
+                """
+                builder.setFileBody(\(raw: fileBody))
+                """
+            )
         }
 
         codes.append(
@@ -291,6 +297,17 @@ extension MethodMacroParser {
         let variblePathComps = self.variblePathComps
         for arg in funcArgs {
             if let query = arg.attributes.findAttribute(named: "Url"), query.atSign.text == "@" {
+                return arg.internalName
+            }
+        }
+        return nil
+    }
+
+    func getFileBody() throws -> String? {
+        let funcArgs = funcDecl.parameterList
+        let variablePathComps = self.variblePathComps
+        for arg in funcArgs {
+            if let query = arg.attributes.findAttribute(named: "FileBody"), query.atSign.text == "@" {
                 return arg.internalName
             }
         }

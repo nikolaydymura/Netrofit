@@ -20,6 +20,7 @@ public final class NetrofitProvider: Sendable {
         let url = try builder.fullURL(baseURL: baseURL)
         let headers = builder.fullHeaders()
         let body = try builder.bodyData()
+        let bodyStream = builder.bodyStream()
         let method = builder.method
 
         return session.createTask(
@@ -27,6 +28,7 @@ public final class NetrofitProvider: Sendable {
             url: url,
             headers: headers,
             body: body,
+            bodyStream: bodyStream,
             plugins: plugins
         )
     }

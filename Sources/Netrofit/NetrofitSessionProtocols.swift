@@ -13,6 +13,7 @@ public protocol NetrofitSession: Sendable {
         url: URL,
         headers: [String: String]?,
         body: Data?,
+        bodyStream: InputStream?,
         plugins: [NetrofitPlugin]
     ) -> NetrofitTask
 }

@@ -12,6 +12,7 @@ public enum PayloadFormat: String {
 }
 
 public struct RequestBuilder {
+    public var fileBody: URL?
     public var url: String?
     public var path: String
     public var method: String
@@ -70,6 +71,11 @@ public struct RequestBuilder {
         self.body = body
     }
 
+    public mutating func setFileBody(_ file: URL?) {
+        guard let file else { return }
+        self.fileBody = file
+    }
+
     public mutating func addField<E: Encodable>(_ key: String, value: E?) {
         guard let value else { return }
         fields[key] = value
@@ -112,6 +118,13 @@ extension RequestBuilder {
             return url
         }
         throw NetrofitRequestError.badURL(urlStr)
+    }
+
+    public func bodyStream() -> InputStream? {
+        if let file = fileBody {
+            return InputStream(url: file)
+        }
+        return nil
     }
 
     public func bodyData() throws -> Data? {

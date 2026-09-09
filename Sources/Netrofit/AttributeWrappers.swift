@@ -48,6 +48,15 @@ public struct Body<T: Encodable> {
     }
 }
 
+@propertyWrapper
+public struct FileBody {
+    public var wrappedValue: URL
+
+    public init(wrappedValue: URL) {
+        self.wrappedValue = wrappedValue
+    }
+}
+
 // Query
 @propertyWrapper
 public struct Field<T: Encodable> {

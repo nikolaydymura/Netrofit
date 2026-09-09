@@ -33,10 +33,14 @@ final class _NetrofitSession: NSObject, NetrofitSession, @unchecked Sendable, UR
         urlSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
-    func createTask(method: String, url: URL, headers: [String: String]?, body: Data?, plugins: [NetrofitPlugin]) -> NetrofitTask {
+    func createTask(method: String, url: URL, headers: [String: String]?, body: Data?, bodyStream: InputStream?, plugins: [NetrofitPlugin]) -> NetrofitTask {
         var request = URLRequest(url: url)
         request.httpMethod = method
-        request.httpBody = body
+        if let bodyStream {
+            request.httpBodyStream = bodyStream
+        } else {
+            request.httpBody = body
+        }
         request.allHTTPHeaderFields = headers
 
         let task = _NetrofitTask(urlSession: urlSession, request: request, plugins: plugins)
