@@ -138,6 +138,14 @@ struct MethodMacroParser<D: DeclSyntaxProtocol & WithOptionalCodeBlockSyntax, C:
             )
         }
 
+        if let timeout = try getTimeout() {
+            codes.append(
+                """
+                builder.timeout = \(raw: timeout)
+                """
+            )
+        }
+
         for query in try getQueries() {
             codes.append(
                 """
@@ -297,6 +305,16 @@ extension MethodMacroParser {
         let variblePathComps = self.variblePathComps
         for arg in funcArgs {
             if let query = arg.attributes.findAttribute(named: "Url"), query.atSign.text == "@" {
+                return arg.internalName
+            }
+        }
+        return nil
+    }
+
+    func getTimeout() throws -> String? {
+        let funcArgs = funcDecl.parameterList
+        for arg in funcArgs {
+            if let query = arg.attributes.findAttribute(named: "Timeout"), query.atSign.text == "@" {
                 return arg.internalName
             }
         }

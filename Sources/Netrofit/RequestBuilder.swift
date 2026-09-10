@@ -12,6 +12,7 @@ public enum PayloadFormat: String {
 }
 
 public struct RequestBuilder {
+    public var timeout: TimeInterval?
     public var fileBody: URL?
     public var url: String?
     public var path: String

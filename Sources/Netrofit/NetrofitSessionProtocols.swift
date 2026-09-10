@@ -14,6 +14,7 @@ public protocol NetrofitSession: Sendable {
         headers: [String: String]?,
         body: Data?,
         bodyStream: InputStream?,
+        timeout: TimeInterval?,
         plugins: [NetrofitPlugin]
     ) -> NetrofitTask
 }

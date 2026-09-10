@@ -22,6 +22,7 @@ public final class NetrofitProvider: Sendable {
         let body = try builder.bodyData()
         let bodyStream = builder.bodyStream()
         let method = builder.method
+        let timeout = builder.timeout
 
         return session.createTask(
             method: method,
@@ -29,6 +30,7 @@ public final class NetrofitProvider: Sendable {
             headers: headers,
             body: body,
             bodyStream: bodyStream,
+            timeout: timeout,
             plugins: plugins
         )
     }

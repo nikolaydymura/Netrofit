@@ -105,3 +105,12 @@ public struct Part<T: Encodable> {
         self.mimeType = mimeType
     }
 }
+
+@propertyWrapper
+public struct Timeout {
+    public var wrappedValue: TimeInterval
+
+    public init(wrappedValue: TimeInterval) {
+        self.wrappedValue = wrappedValue
+    }
+}
