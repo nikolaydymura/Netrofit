@@ -168,6 +168,12 @@ struct MethodMacroParser<D: DeclSyntaxProtocol & WithOptionalCodeBlockSyntax, C:
                 builder.setBody(\(raw: body))
                 """
             )
+        } else if let fileBody = try getFileBody() {
+            codes.append(
+                """
+                builder.fileBody = \(raw: fileBody)
+                """
+            )
         } else if let fileds = try getFileds() {
             for filed in fileds {
                 codes.append(
@@ -176,12 +182,6 @@ struct MethodMacroParser<D: DeclSyntaxProtocol & WithOptionalCodeBlockSyntax, C:
                     """
                 )
             }
-        } else if let fileBody = try getFileBody() {
-            codes.append(
-                """
-                builder.setFileBody(\(raw: fileBody))
-                """
-            )
         }
 
         codes.append(
@@ -323,13 +323,13 @@ extension MethodMacroParser {
 
     func getFileBody() throws -> String? {
         let funcArgs = funcDecl.parameterList
-        let variablePathComps = self.variblePathComps
-        for arg in funcArgs {
-            if let query = arg.attributes.findAttribute(named: "FileBody"), query.atSign.text == "@" {
-                return arg.internalName
+        let bodies = funcArgs.compactMap { arg in
+            if let attribute = arg.attributes.findAttribute(named: "FileBody"), attribute.atSign.text == "@" {
+                return arg
             }
+            return nil
         }
-        return nil
+        return bodies.first?.internalName
     }
 
     func getQueries() throws -> [(key: String, value: String, encoded: Bool)] {

@@ -72,11 +72,6 @@ public struct RequestBuilder {
         self.body = body
     }
 
-    public mutating func setFileBody(_ file: URL?) {
-        guard let file else { return }
-        self.fileBody = file
-    }
-
     public mutating func addField<E: Encodable>(_ key: String, value: E?) {
         guard let value else { return }
         fields[key] = value
